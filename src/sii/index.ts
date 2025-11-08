@@ -58,6 +58,14 @@ export {
   isTotalValid,
   calculateDetalleTotals,
   applyGlobalDiscounts,
-  validateTotales,
+  validateTotales as validateTotalesCalculation,
   type CalculatedTotals,
 } from './calculators'
+
+export {
+  validateDTEStructure,
+  validateDetalle,
+  validateTotales,
+  validateAllDetalles,
+  type ValidationResult,
+} from './validators'
