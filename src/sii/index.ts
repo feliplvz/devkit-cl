@@ -69,3 +69,5 @@ export {
   validateAllDetalles,
   type ValidationResult,
 } from './validators'
+
+export { DTEBuilder, BoletaBuilder } from './builders'
