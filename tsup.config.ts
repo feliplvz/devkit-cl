@@ -5,6 +5,7 @@ export default defineConfig({
     index: 'src/index.ts',
     'validators/index': 'src/validators/index.ts',
     'formatters/index': 'src/formatters/index.ts',
+    'sii/index': 'src/sii/index.ts',
   },
   format: ['cjs', 'esm'],
   dts: true,
