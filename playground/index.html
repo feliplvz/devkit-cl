@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>devkit-cl SII Playground</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🇨🇱 devkit-cl SII Playground</h1>
+      <p>Crea Documentos Tributarios Electrónicos sin backend</p>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h3>Tipo de Documento</h3>
+        <div class="doc-types">
+          <button class="doc-btn active" data-type="33">
+            <span class="type-num">33</span>
+            <span class="type-name">Factura Electrónica</span>
+          </button>
+          <button class="doc-btn" data-type="39">
+            <span class="type-num">39</span>
+            <span class="type-name">Boleta Electrónica</span>
+          </button>
+          <button class="doc-btn" data-type="61">
+            <span class="type-num">61</span>
+            <span class="type-name">Nota de Crédito</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="editor">
+        <form id="dteForm">
+          <!-- IdDoc -->
+          <section class="form-section">
+            <h3>📋 Datos del Documento</h3>
+            <div class="form-grid">
+              <div class="form-field">
+                <label>Folio</label>
+                <input type="number" id="folio" placeholder="12345" required>
+              </div>
+              <div class="form-field">
+                <label>Fecha Emisión</label>
+                <input type="date" id="fechaEmision" required>
+              </div>
+              <div class="form-field">
+                <label>Forma de Pago</label>
+                <select id="formaPago">
+                  <option value="1">Contado</option>
+                  <option value="2">Crédito</option>
+                  <option value="3">Sin Costo</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <!-- Emisor -->
+          <section class="form-section">
+            <h3>🏢 Emisor</h3>
+            <div class="form-grid">
+              <div class="form-field">
+                <label>RUT</label>
+                <input type="text" id="emisorRut" placeholder="76.123.456-7" required>
+              </div>
+              <div class="form-field">
+                <label>Razón Social</label>
+                <input type="text" id="emisorRazon" placeholder="Empresa SpA" required>
+              </div>
+              <div class="form-field">
+                <label>Giro</label>
+                <input type="text" id="emisorGiro" placeholder="Servicios TI">
+              </div>
+              <div class="form-field">
+                <label>Dirección</label>
+                <input type="text" id="emisorDireccion" placeholder="Av. Providencia 1234">
+              </div>
+              <div class="form-field">
+                <label>Comuna</label>
+                <input type="text" id="emisorComuna" placeholder="Providencia">
+              </div>
+            </div>
+          </section>
+
+          <!-- Receptor -->
+          <section class="form-section">
+            <h3>👤 Receptor</h3>
+            <div class="form-grid">
+              <div class="form-field">
+                <label>RUT</label>
+                <input type="text" id="receptorRut" placeholder="12.345.678-9" required>
+              </div>
+              <div class="form-field">
+                <label>Razón Social</label>
+                <input type="text" id="receptorRazon" placeholder="Cliente Ltda" required>
+              </div>
+              <div class="form-field">
+                <label>Giro</label>
+                <input type="text" id="receptorGiro" placeholder="Comercio">
+              </div>
+              <div class="form-field">
+                <label>Dirección</label>
+                <input type="text" id="receptorDireccion" placeholder="Los Leones 456">
+              </div>
+              <div class="form-field">
+                <label>Comuna</label>
+                <input type="text" id="receptorComuna" placeholder="Santiago">
+              </div>
+            </div>
+          </section>
+
+          <!-- Items -->
+          <section class="form-section">
+            <div class="section-header">
+              <h3>📦 Items</h3>
+              <button type="button" id="addItem" class="btn-secondary">+ Agregar Item</button>
+            </div>
+            <div id="itemsList"></div>
+          </section>
+
+          <!-- Actions -->
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Generar DTE</button>
+            <button type="button" id="resetForm" class="btn-secondary">Limpiar</button>
+          </div>
+        </form>
+      </main>
+
+      <aside class="output">
+        <div class="output-header">
+          <h3>📄 Output</h3>
+          <button id="copyJson" class="btn-icon" title="Copiar JSON">📋</button>
+        </div>
+        <div class="tabs">
+          <button class="tab active" data-tab="json">JSON</button>
+          <button class="tab" data-tab="validation">Validación</button>
+        </div>
+        <div class="tab-content active" id="jsonTab">
+          <pre><code id="jsonOutput">// El DTE generado aparecerá aquí</code></pre>
+        </div>
+        <div class="tab-content" id="validationTab">
+          <div id="validationOutput">
+            <p class="placeholder">Genera un DTE para ver validaciones</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script type="module" src="/playground/main.ts"></script>
+</body>
+</html>
