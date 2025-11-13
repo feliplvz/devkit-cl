@@ -22,7 +22,14 @@ export class DTEBuilder {
   private idDoc: Partial<IdDoc> & { TipoDTE?: 33 | 34 | 39 | 41 | 43 | 46 | 52 | 56 | 61 } = {}
   private emisor: Partial<Emisor> = {}
   private receptor: Partial<Receptor> = {}
-  private totales: Partial<Totales> = {}
+  protected totales: Partial<Totales> = {}
+  protected detalle: Detalle[] = []
+  protected descuentosGlobales: Array<{
+    tipo: 'D' | 'R'
+    valor: number
+    esPorcentaje: boolean
+    glosa?: string
+  }> = []
 
   // IdDoc
   setTipo(tipo: 33 | 34 | 39 | 41 | 43 | 46 | 52 | 56 | 61): this {
@@ -123,6 +130,7 @@ export class DTEBuilder {
     }
 
     this.dte.Detalle!.push(detalle)
+    this.detalle.push(detalle) // Sincronizar con protected
     return this
   }
 
@@ -148,6 +156,7 @@ export class DTEBuilder {
     }
 
     this.dte.DscRcgGlobal.push(dscRcg)
+    this.descuentosGlobales.push(data) // Sincronizar con protected
     return this
   }
 
@@ -184,7 +193,27 @@ export class DTEBuilder {
       throw new Error('No hay items para calcular totales')
     }
 
-    const calculated = calculateDetalleTotals(this.dte.Detalle)
+    let calculated = calculateDetalleTotals(this.dte.Detalle)
+
+    // Aplicar descuentos/recargos globales si existen
+    if (this.descuentosGlobales.length > 0) {
+      for (const desc of this.descuentosGlobales) {
+        const descuentoMonto = desc.esPorcentaje
+          ? Math.round((calculated.MntNeto * desc.valor) / 100)
+          : desc.valor
+
+        if (desc.tipo === 'D') {
+          // Descuento: reduce el neto
+          calculated.MntNeto = Math.max(0, calculated.MntNeto - descuentoMonto)
+        } else {
+          // Recargo: aumenta el neto
+          calculated.MntNeto += descuentoMonto
+        }
+      }
+      // Recalcular IVA y total después de aplicar descuentos
+      calculated.IVA = Math.round((calculated.MntNeto * tasaIVA) / 100)
+      calculated.MntTotal = calculated.MntNeto + calculated.IVA + calculated.MntExe
+    }
 
     this.totales = {
       ...(calculated.MntNeto > 0 && { MntNeto: calculated.MntNeto }),
